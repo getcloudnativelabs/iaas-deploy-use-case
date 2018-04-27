@@ -36,7 +36,7 @@ data "aws_ami" "amazon_linux" {
 }
 
 module "security_group" {
-  source = "terraform-aws-modules/security-group/aws"
+  source = "../iaas-blueprint-components/aws/security-group/"
 
   name        = "example"
   description = "Security group for example usage with EC2 instance"
