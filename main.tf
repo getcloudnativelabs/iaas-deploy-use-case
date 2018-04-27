@@ -1,7 +1,6 @@
 provider "aws" {
   region = "eu-west-1"
-  access_key = "AKIAISLAZXKGDOWGTNOQ"
-  secret_key = "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"  
+  shared_credentials_file = "/Users/metmajer-bi/.aws/credentials"
 }
 
 ##################################################################
