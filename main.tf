@@ -49,10 +49,10 @@ module "security_group" {
 
 resource "aws_eip" "this" {
   vpc      = true
-  instance = "${module.ec2.id[0]}"
+  instance = "${module.ec2_instance.id[0]}"
 }
 
-module "ec2" {
+module "ec2_instance" {
   source = "../iaas-blueprint-components/aws/ec2-instance/"
 
   name                        = "example"
