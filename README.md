@@ -14,7 +14,15 @@ A simple IaaS deployment use-case using Terraform.
 
 ## How-To
 
-1. Add the AWS credentials for your *default* and *testing* environments in `~/.aws/credentials`:
+1. Install dependencies
+
+```
+bundle install
+```
+
+Requires the Ruby `bundler` gem, which can be installed via `sudo gem install bundler`.
+
+2. Add the AWS credentials for your *default* and *testing* environments in `~/.aws/credentials`:
 
 ```
 [default]
@@ -28,22 +36,20 @@ aws_secret_access_key={YOUR_TESTING_SECRET_ACCESS_KEY}
 
 The `default` credentials will be used for regular deployments, whereas the *testing* credentials will be used for deployment testing purposes only.
 
-2. Set the AWS region for your testing activities in `terraform-testing.tfvars` and `.env`, respectively:
+3. Set the AWS region for your testing activities in `terraform-testing.tfvars` and `.env`, respectively:
 
 ```
-# terraform-testing.tfvars
 aws_profile = "staging"
 aws_region  = "{YOUR_REGION}"
 ```
 
 ```
-# .env
 export AWS_DEFAULT_REGION={YOUR_REGION}
 ```
 
 The settings in `.terraform-testing.tfvars` will be used when executing test deployments, whereas those in `.env` will be used when validating deployed infrastructure components.
 
-3. Provide your settings in `terraform.tfvars` (see `variables.tf` for supported options):
+4. Provide your settings in `terraform.tfvars` (see `variables.tf` for supported options):
 
 ```
 ec2_key_name = "{YOUR_EC2_KEY_NAME}"
@@ -51,13 +57,13 @@ ec2_key_name = "{YOUR_EC2_KEY_NAME}"
 
 The settings in `terraform.tfvars` define user-provided input.
 
-4. Deploy the infrastructure:
+5. Deploy the infrastructure:
 
 ```
 make all
 ```
 
-5. Destroy the infrastructure:
+6. Destroy the infrastructure:
 
 ```
 make destroy
