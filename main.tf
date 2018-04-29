@@ -34,21 +34,16 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-module "security_group" {
-  source = "../iaas-blueprint-components/aws/security-group/"
+module "ec2_security_group" {
+  source = "../iaas-blueprint-components/aws/ec2-security-group/"
 
   name        = "example"
   description = "Security group for example usage with EC2 instance"
   vpc_id      = "${data.aws_vpc.default.id}"
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["http-80-tcp", "all-icmp"]
+  ingress_rules       = ["ssh-tcp", "http-80-tcp", "all-icmp"]
   egress_rules        = ["all-all"]
-}
-
-resource "aws_eip" "this" {
-  vpc      = true
-  instance = "${module.ec2_instance.id[0]}"
 }
 
 module "ec2_instance" {
