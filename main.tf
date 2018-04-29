@@ -1,6 +1,7 @@
 provider "aws" {
-  region = "eu-west-1"
-  shared_credentials_file = "/Users/metmajer-bi/.aws/credentials"
+  region = "${var.aws_region}"
+  shared_credentials_file = "${var.aws_shared_credentials_file}"
+  profile = "${var.aws_profile}"
 }
 
 ##################################################################
@@ -53,6 +54,7 @@ module "ec2_instance" {
   ami                         = "${data.aws_ami.amazon_linux.id}"
   instance_type               = "t2.micro"
   subnet_id                   = "${element(data.aws_subnet_ids.all.ids, 0)}"
-  vpc_security_group_ids      = ["${module.security_group.this_security_group_id}"]
+  vpc_security_group_ids      = ["${module.ec2_security_group.this_security_group_id}"]
   associate_public_ip_address = true
+  key_name                    = "${var.ec2_key_name}"
 }
