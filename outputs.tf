@@ -17,3 +17,8 @@ output "instance_public_dns" {
   description = "Public DNS name assigned to the EC2 instance"
   value       = "${module.ec2_instance.public_dns[0]}"
 }
+
+output "instance_key_name" {
+  description = "EC2 key pair name"
+  value       = ["${module.ec2_instance.key_name}"]
+}
