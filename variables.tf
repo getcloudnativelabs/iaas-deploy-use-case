@@ -1,6 +1,27 @@
+###########
+# METADATA
+###########
+
+variable "meta_name" {
+  description = "A name describing the deployment."
+}
+
+variable "meta_owner_name" {
+  description = "The name of the person that owns the deployment."
+}
+
+variable "meta_owner_email" {
+  description = "The email address of the person that owns the deployment."
+}
+
+variable "meta_owner_department" {
+  description = "The department the person that owns the deployment belongs to."
+}
+
 ######
 # AWS
 ######
+
 variable "aws_shared_credentials_file" {
   description = "An absolute path to your AWS shared credentials file."
   default     = "~/.aws/credentials"
@@ -21,5 +42,11 @@ variable "aws_region" {
 ######
 
 variable "ec2_key_name" {
-  description = "Name of your EC2 key pair."
+  description = "The name of your EC2 key pair."
 }
+
+variable "ec2_instance_type" {
+  description = "The instance type of the EC2 instance."
+  default     = "t2.micro"
+}
+

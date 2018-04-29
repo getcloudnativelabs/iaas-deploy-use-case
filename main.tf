@@ -38,8 +38,7 @@ data "aws_ami" "amazon_linux" {
 module "ec2_security_group" {
   source = "../iaas-blueprint-components/aws/ec2-security-group/"
 
-  name        = "example"
-  description = "Security group for example usage with EC2 instance"
+  name        = "${var.meta_name}-sg"
   vpc_id      = "${data.aws_vpc.default.id}"
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
@@ -50,11 +49,18 @@ module "ec2_security_group" {
 module "ec2_instance" {
   source = "../iaas-blueprint-components/aws/ec2-instance/"
 
-  name                        = "example"
+  name                        = "${var.meta_name}"
   ami                         = "${data.aws_ami.amazon_linux.id}"
-  instance_type               = "t2.micro"
+  instance_type               = "${var.ec2_instance_type}"
   subnet_id                   = "${element(data.aws_subnet_ids.all.ids, 0)}"
   vpc_security_group_ids      = ["${module.ec2_security_group.this_security_group_id}"]
   associate_public_ip_address = true
   key_name                    = "${var.ec2_key_name}"
+
+  tags {
+    Name             = "${var.meta_name}"
+    Owner_Name       = "${var.meta_owner_name}"
+    Owner_Email      = "${var.meta_owner_email}"
+    Owner_Department = "${var.meta_owner_department}"
+  }
 }
