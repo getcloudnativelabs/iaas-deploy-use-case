@@ -4,7 +4,7 @@ all: test deploy
 
 .PHONY: test
 test: ## Test infrastructure deployments.
-	env $(shell cat .env | xargs) kitchen verify
+	env $(shell cat .env | xargs) bundle exec kitchen verify
 
 .PHONY: deploy
 deploy: ## Auto-deploy infrastructure changes.
