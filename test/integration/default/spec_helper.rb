@@ -1,5 +1,6 @@
 require 'aws-sdk'
 
+# Via https://gist.github.com/tom-butler/dd85c32f1db49246f2f6ec84f555281f
 module EC2Helper
   def self.get_id_from_name(name)
     # Filter the ec2 instances for name and state pending or running
