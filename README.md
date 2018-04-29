@@ -57,7 +57,7 @@ ec2_key_name = "{YOUR_EC2_KEY_NAME}"
 
 The settings in `terraform.tfvars` define user-provided input.
 
-5. Deploy the infrastructure:
+5. Run tests and deploy the infrastructure:
 
 ```
 make all
