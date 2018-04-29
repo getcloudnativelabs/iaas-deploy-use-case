@@ -1,10 +1,10 @@
-default: plan
+default: test
 
-all: deploy
+all: test deploy
 
-.PHONY: plan
-plan: ## Plan infrastructure changes.
-	terraform plan
+.PHONY: test
+test: ## Test infrastructure deployments.
+	env $(shell cat .env | xargs) kitchen verify
 
 .PHONY: deploy
 deploy: ## Auto-deploy infrastructure changes.
@@ -13,3 +13,7 @@ deploy: ## Auto-deploy infrastructure changes.
 .PHONY: destroy
 destroy: ## Auto-destroy infrastructure changes.
 	terraform destroy -auto-approve
+
+.PHONY: plan
+plan: ## Plan infrastructure changes.
+	terraform plan

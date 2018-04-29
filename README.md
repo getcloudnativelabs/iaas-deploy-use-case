@@ -14,27 +14,50 @@ A simple IaaS deployment use-case using Terraform.
 
 ## How-To
 
-1. Provide your AWS Credentials in `~/.aws/credentials`
+1. Add the AWS credentials for your *default* and *testing* environments in `~/.aws/credentials`:
 
 ```
 [default]
 aws_access_key_id={YOUR_ACCESS_KEY_ID}
 aws_secret_access_key={YOUR_SECRET_ACCESS_KEY}
+
+[testing]
+aws_access_key_id={YOUR_TESTING_ACCESS_KEY_ID}
+aws_secret_access_key={YOUR_TESTING_SECRET_ACCESS_KEY}
 ```
 
-2. Provide your settings in `terraform.tfvars` (see `variables.tf` for supported options)
+The `default` credentials will be used for regular deployments, whereas the *testing* credentials will be used for deployment testing purposes only.
+
+2. Set the AWS region for your testing activities in `terraform-testing.tfvars` and `.env`, respectively:
 
 ```
-ec2_key_name = "YOUR_AWS_EC2_KEY_NAME"
+# terraform-testing.tfvars
+aws_profile = "staging"
+aws_region  = "{YOUR_REGION}"
 ```
 
-3. Deploy the infrastructure
+```
+# .env
+export AWS_DEFAULT_REGION={YOUR_REGION}
+```
+
+The settings in `.terraform-testing.tfvars` will be used when executing test deployments, whereas those in `.env` will be used when validating deployed infrastructure components.
+
+3. Provide your settings in `terraform.tfvars` (see `variables.tf` for supported options):
+
+```
+ec2_key_name = "{YOUR_EC2_KEY_NAME}"
+```
+
+The settings in `terraform.tfvars` define user-provided input.
+
+4. Deploy the infrastructure:
 
 ```
 make all
 ```
 
-4. Destroy the infrastructure
+5. Destroy the infrastructure:
 
 ```
 make destroy
