@@ -1,6 +1,6 @@
-default: test
+default: init test
 
-all: deploy
+all: init test deploy
 
 .PHONY: init
 ## Initialize Terraform dependencies.
@@ -15,15 +15,15 @@ test:
 
 .PHONY: deploy
 ## Auto-deploy infrastructure changes.
-deploy: init test 
+deploy:
 	terraform apply -auto-approve
 
 .PHONY: destroy
 ## Auto-destroy infrastructure changes.
-destroy: init
+destroy:
 	terraform destroy -auto-approve
 
 .PHONY: plan
 ## Plan infrastructure changes.
-plan: init
+plan:
 	terraform plan
