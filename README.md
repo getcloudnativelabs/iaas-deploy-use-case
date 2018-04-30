@@ -47,8 +47,8 @@ Assuming you don't alter the settings in the next step, the credentials under *t
 
 ```
 {
-  "ec2_instance_type": "t2.micro",
-  "ec2_key_name": "metmajer-GetCloudNative",
+  "aws_profile": "default",
+  "aws_region": "eu-west-1",
   ...
 ```
 
