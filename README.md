@@ -2,10 +2,8 @@
 
 A simple IaaS deployment use-case using Terraform.
 
-- An EC2 instance (*t2.micro*)
+- An EC2 instance
 - An EC2 Security Group
-    - Ingress: *SSH*, *HTTP*, *ICMP* from *All*
-    - Egress: *All*
 
 ## Prerequisites
 
@@ -34,28 +32,27 @@ aws_access_key_id={YOUR_TESTING_ACCESS_KEY_ID}
 aws_secret_access_key={YOUR_TESTING_SECRET_ACCESS_KEY}
 ```
 
-The `default` credentials will be used for regular deployments, whereas the *testing* credentials will be used for deployment testing purposes only.
+Assuming you don't alter the settings in the next step, the credentials under *testing* will be used when testing deployments. Those under *default* will be used in all non-testing scenarios.
 
-3. Set the AWS region for your testing activities in `terraform-testing.tfvars` and `.env`, respectively:
-
-```
-aws_profile = "staging"
-aws_region  = "{YOUR_REGION}"
-```
+3. Review the settings in `terraform-testing.tfvars.json`. These will apply only in testing:
 
 ```
-export AWS_DEFAULT_REGION={YOUR_REGION}
+{
+  "aws_profile": "testing",
+  "aws_region": "eu-west-1",
+  ...
 ```
 
-The settings in `.terraform-testing.tfvars` will be used when executing test deployments, whereas those in `.env` will be used when validating deployed infrastructure components.
-
-4. Provide your settings in `terraform.tfvars` (see `variables.tf` for supported options):
+4. Review the settings in `terraform.tfvars` (see `variables.tf` for supported settings and defaults):
 
 ```
-ec2_key_name = "{YOUR_EC2_KEY_NAME}"
+{
+  "ec2_instance_type": "t2.micro",
+  "ec2_key_name": "metmajer-GetCloudNative",
+  ...
 ```
 
-The settings in `terraform.tfvars` define user-provided input.
+The settings in `terraform.tfvars` declare user-provided settings and would typically be created on-the-fly.
 
 5. Run tests and deploy the infrastructure:
 
