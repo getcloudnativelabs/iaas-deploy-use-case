@@ -10,6 +10,9 @@ A simple IaaS deployment use-case using Terraform.
 - An AWS AMI User
 - An AWS EC2 Key Pair
 
+- `pre-commit` (see [Install pre-commit](https://pre-commit.com/#install))
+- `terraform` (see [Install Terraform](https://www.terraform.io/intro/getting-started/install.html))
+
 ## How-To
 
 1. Install dependencies
@@ -54,13 +57,19 @@ Assuming you don't alter the settings in the next step, the credentials under *t
 
 The settings in `terraform.tfvars` declare user-provided settings and would typically be created on-the-fly.
 
-5. Run tests and deploy the infrastructure:
+5. Initialize the repository:
+
+```
+make init
+```
+
+6. Test and deploy the infrastructure:
 
 ```
 make all
 ```
 
-6. Destroy the infrastructure:
+7. Destroy the infrastructure:
 
 ```
 make destroy

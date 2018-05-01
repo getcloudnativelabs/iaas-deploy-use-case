@@ -1,0 +1,24 @@
+fail_fast: true
+repos:
+- repo: git://github.com/getcloudnative/pre-commit-hooks
+  sha: v1.2.3
+  hooks:
+    - id: detect-aws-credentials
+      args: [--allow-missing-credentials]
+    - id: detect-private-key
+    - id: check-merge-conflict
+    - id: check-json
+    - id: check-yaml
+- repo: git://github.com/getcloudnative/pre-commit-terraform
+  sha: v1.6.0
+  hooks:
+    - id: terraform_fmt
+    - id: terraform_validate_with_variables
+- repo: local
+  hooks:
+    - id: test
+      name: Run deployment tests
+      description: Run deployment tests.
+      entry: make test
+      language: system
+      types: [file]

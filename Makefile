@@ -5,6 +5,7 @@ all: init test deploy
 .PHONY: init
 ## Initialize Terraform dependencies.
 init:
+	pre-commit install --overwrite
 	terraform init
 
 .PHONY: test
