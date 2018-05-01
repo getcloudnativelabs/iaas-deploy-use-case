@@ -15,13 +15,13 @@ init:
 	terraform init
 
 .PHONY: test
-## Run infrastructure (integration) tests.
+## Run infrastructure (integration) tests (before deployment).
 test:
 	# See https://github.com/hashicorp/terraform/issues/17655
 	TF_WARN_OUTPUT_ERRORS=1 VARS_JSON_FILE=$(ROOT)/terraform-testing.tfvars.json bundle exec kitchen test --destroy=always
 
 .PHONY: smoke-test
-## Run infrastructure smoke tests (after deployment).
+## Run infrastructure (smoke) tests (after deployment).
 smoke-test:
 	VARS_JSON_FILE=$(ROOT)/terraform.tfvars.json rspec -c -f documentation --default-path $(ROOT) -P test/integration/**/*_spec.rb
 

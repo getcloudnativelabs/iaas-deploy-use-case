@@ -17,7 +17,7 @@ repos:
 - repo: local
   hooks:
     - id: test
-      name: Run infrastructure tests
+      name: Run infrastructure (integration) tests
       description: Run infrastructure (integration) tests.
       entry: make test
       language: system
