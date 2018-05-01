@@ -2,13 +2,14 @@ require 'aws-sdk'
 require 'json'
 
 module EC2Helper
-  # Source: https://gist.github.com/tom-butler/dd85c32f1db49246f2f6ec84f555281f
   def self.get_ec2_instance_id_from_tag_name(name, region)
+    ENV['AWS_REGION'] = region
+
     # Filter the ec2 instances for name and state pending or running
-    ec2 = Aws::EC2::Resource.new(region: region)
-    instances = ec2.instances({ filters: [
-      { name: "tag:Name", values: [name] },
-      { name: "instance-state-name", values: ["pending", "running"] }
+    resource = Aws::EC2::Resource.new
+    instances = resource.instances({ filters: [
+      { name: 'tag:Name', values: [name] },
+      { name: 'instance-state-name', values: ['pending', 'running'] }
     ]}).map(&:id)
 
     if instances.count == 1
@@ -23,8 +24,18 @@ module EC2Helper
   end
 end
 
-class TFVarsHelper
-  def self.get_tfvars_from_json_file(path)
+class VarsHelper
+  @vars = Hash.new
+
+  def self.load_vars_from_json_file(path)
     JSON.parse(File.read(path))
+  end
+
+  def initialize(path = ENV['VARS_JSON_FILE'])
+    @vars = self.class.load_vars_from_json_file(path)
+  end
+
+  def get(name)
+    @vars[name]
   end
 end

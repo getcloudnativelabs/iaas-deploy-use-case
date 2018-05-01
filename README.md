@@ -7,23 +7,16 @@ A simple IaaS deployment use-case using Terraform.
 
 ## Prerequisites
 
-- An AWS AMI User
-- An AWS EC2 Key Pair
+- Create an AWS AMI User
+- Create an AWS EC2 Key Pair
 
-- `pre-commit` (see [Install pre-commit](https://pre-commit.com/#install))
-- `terraform` (see [Install Terraform](https://www.terraform.io/intro/getting-started/install.html))
+- Install `bundle` (see [Install Bundler](http://bundler.io/))
+- Install `pre-commit` (see [Install pre-commit](https://pre-commit.com/#install))
+- Install `terraform` (see [Install Terraform](https://www.terraform.io/intro/getting-started/install.html))
 
 ## How-To
 
-1. Install dependencies
-
-```
-bundle install
-```
-
-Requires the Ruby `bundler` gem, which can be installed via `sudo gem install bundler`.
-
-2. Add the AWS credentials for your *default* and *testing* environments in `~/.aws/credentials`:
+1. Add the AWS credentials for your *default* and *testing* environments in `~/.aws/credentials`:
 
 ```
 [default]
@@ -37,7 +30,7 @@ aws_secret_access_key={YOUR_TESTING_SECRET_ACCESS_KEY}
 
 Assuming you don't alter the settings in the next step, the credentials under *testing* will be used when testing deployments. Those under *default* will be used in all non-testing scenarios.
 
-3. Review the settings in `terraform-testing.tfvars.json`. These will apply only in testing:
+2. Review the settings in `terraform-testing.tfvars.json`. These will apply only in testing:
 
 ```
 {
@@ -46,7 +39,7 @@ Assuming you don't alter the settings in the next step, the credentials under *t
   ...
 ```
 
-4. Review the settings in `terraform.tfvars` (see `variables.tf` for supported settings and defaults):
+3. Review the settings in `terraform.tfvars` (see `variables.tf` for supported settings and defaults):
 
 ```
 {
@@ -57,19 +50,19 @@ Assuming you don't alter the settings in the next step, the credentials under *t
 
 The settings in `terraform.tfvars` declare user-provided settings and would typically be created on-the-fly.
 
-5. Initialize the repository:
+4. Initialize the repository:
 
 ```
 make init
 ```
 
-6. Test and deploy the infrastructure:
+5. Test and deploy the infrastructure:
 
 ```
 make all
 ```
 
-7. Destroy the infrastructure:
+6. Destroy the infrastructure:
 
 ```
 make destroy
