@@ -745,11 +745,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awsecrets
-  awspec
-  kitchen-terraform
-  kitchen-verifier-awspec
-  test-kitchen
+  aws-sdk (= 3.0.1)
+  awsecrets (= 1.14.0)
+  awspec (= 1.5.2)
+  kitchen-terraform (= 3.3.0)
+  kitchen-verifier-awspec (= 0.1.1)
+  test-kitchen (= 1.21.1)
 
 BUNDLED WITH
    1.16.1
