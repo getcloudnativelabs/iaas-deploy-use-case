@@ -10,6 +10,7 @@ A simple IaaS deployment use-case using Terraform.
 - Create an AWS AMI User
 - Create an AWS EC2 Key Pair
 
+- Install `make`
 - Install `bundle` (see [Install Bundler](http://bundler.io/))
 - Install `pre-commit` (see [Install pre-commit](https://pre-commit.com/#install))
 - Install `terraform` (see [Install Terraform](https://www.terraform.io/intro/getting-started/install.html))
