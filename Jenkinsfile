@@ -14,7 +14,7 @@ pipeline {
   environment {
     AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
     AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
-    AWS_REGION            = credentials("${params.aws_region}")
+    AWS_REGION            = "${params.aws_region}"
   }
 
   stages {
@@ -23,8 +23,6 @@ pipeline {
         echo 'Initialize project.'
         sh 'make init'
         writeJSON file: 'terraform.tfvars.json', json: [
-          "aws_profile":           "default",
-          "aws_region":            "${params.aws_region}",
           "ec2_instance_type":     "${params.ec2_instance_type}",
           "ec2_key_name":          "${params.ec2_key_name}",
           "meta_name":             "${params.meta_name}",
