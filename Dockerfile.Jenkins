@@ -1,4 +1,4 @@
-FROM jenkinsci/blueocean:latest
+FROM jenkins/jenkins:lts
 
 MAINTAINER metmajer@getcloudnative.io
 
@@ -6,12 +6,25 @@ LABEL Description="This image provides a custom Jenkins environment." \
       Vendor="getcloudnative.io" \
       Version="0.1"
 
-ENV PY_PKGS "python py-setuptools"
-ENV RUBY_PKGS "ruby ruby-dev ruby-bundler ruby-io-console"
-ENV OTHER_PKGS "build-base libffi-dev terraform"
+ENV PY_PKGS "python python-setuptools"
+ENV RUBY_PKGS "ruby ruby-dev ruby-bundler"
+ENV OTHER_PKGS "build-essential libffi-dev"
+ENV PKGS "${PY_PKGS} ${RUBY_PKGS} ${OTHER_PKGS}"
+
+ENV TERRAFORM_VERSION 0.11.7
 
 USER root
 
-RUN apk --update --upgrade --no-cache add ${PY_PKGS} ${RUBY_PKGS} ${OTHER_PKGS} && \
-    # Install pre-commit
-    curl https://bootstrap.pypa.io/get-pip.py | python - pre-commit
+RUN apt-get update -y && \
+    apt-get install -y ${PKGS} && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
+
+# Install pre-commit
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - pre-commit
+
+# Install Terraform
+RUN wget -q -O /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    unzip /tmp/terraform.zip -d /usr/bin && \
+    rm -rf /tmp/terraform.zip
+
+USER jenkins
