@@ -2,13 +2,13 @@ pipeline {
   agent any
 
   parameters {
-    choice(name: 'aws_region',            choices: 'EU-WEST-1\nUS-EAST-1', description: 'The name of the AWS region.')
-    choice(name: 'ec2_instance_type',     choices: 'T2.MICRO\nM3.MEDIUM',  description: 'The type of the EC2 instance.')
-    string(name: 'ec2_key_name',          defaultValue: '',                description: 'The name of your EC2 key pair.')
-    string(name: 'meta_name',             defaultValue: '',                description: 'A name describing the deployment.')
-    string(name: 'meta_owner_name',       defaultValue: '',                description: 'Your name.')
-    string(name: 'meta_owner_email',      defaultValue: '',                description: 'Your email address.')
-    string(name: 'meta_owner_department', defaultValue: 'Development',     description: 'Your department.')
+    choice(name: 'aws_region',            choices: 'EU-WEST-1\nUS-EAST-1', description: 'The name of the AWS region')
+    choice(name: 'ec2_instance_type',     choices: 'T2.MICRO\nM3.MEDIUM',  description: 'The EC2 instance type')
+    string(name: 'ec2_key_name',          defaultValue: '',                description: 'The name of your EC2 key pair')
+    string(name: 'meta_name',             defaultValue: '',                description: 'A name describing the deployment')
+    string(name: 'meta_owner_name',       defaultValue: '',                description: 'Your name')
+    string(name: 'meta_owner_email',      defaultValue: '',                description: 'Your email address')
+    string(name: 'meta_owner_department', defaultValue: 'Development',     description: 'Your department')
   }
 
   environment {
