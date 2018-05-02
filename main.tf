@@ -1,7 +1,7 @@
 provider "aws" {
-  region = "${var.aws_region}"
+  region                  = "${var.aws_region}"
   shared_credentials_file = "${var.aws_shared_credentials_file}"
-  profile = "${var.aws_profile}"
+  profile                 = "${var.aws_profile}"
 }
 
 ##################################################################
@@ -36,10 +36,10 @@ data "aws_ami" "amazon_linux" {
 }
 
 module "ec2_security_group" {
-  source = "../iaas-blueprint-components/aws/ec2-security-group/"
+  source = "github.com/getcloudnativelabs/iaas-blueprint-components//aws/ec2-security-group"
 
-  name        = "${var.meta_name}-sg"
-  vpc_id      = "${data.aws_vpc.default.id}"
+  name   = "${var.meta_name}-sg"
+  vpc_id = "${data.aws_vpc.default.id}"
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
   ingress_rules       = ["ssh-tcp", "http-80-tcp", "all-icmp"]
@@ -47,7 +47,7 @@ module "ec2_security_group" {
 }
 
 module "ec2_instance" {
-  source = "../iaas-blueprint-components/aws/ec2-instance/"
+  source = "github.com/getcloudnativelabs/iaas-blueprint-components//aws/ec2-instance"
 
   name                        = "${var.meta_name}"
   ami                         = "${data.aws_ami.amazon_linux.id}"
