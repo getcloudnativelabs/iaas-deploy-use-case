@@ -23,7 +23,7 @@ test:
 .PHONY: smoke-test
 ## Run infrastructure (smoke) tests (after deployment).
 smoke-test:
-	VARS_JSON_FILE=$(ROOT)/terraform.tfvars.json rspec -c -f documentation --default-path $(ROOT) -P test/integration/**/*_spec.rb
+	VARS_JSON_FILE=$(ROOT)/terraform.tfvars.json bundle exec rspec -c -f documentation --default-path $(ROOT) -P test/integration/**/*_spec.rb
 
 .PHONY: deploy
 ## Auto-deploy infrastructure.
