@@ -22,14 +22,6 @@ pipeline {
       steps {
         echo 'Initialize project.'
         sh 'make init'
-        writeJSON file: 'terraform.tfvars.json', json: [
-          "ec2_instance_type":     "${params.ec2_instance_type}",
-          "ec2_key_name":          "${params.ec2_key_name}",
-          "meta_name":             "${params.meta_name}",
-          "meta_owner_name":       "${params.meta_owner_name}",
-          "meta_owner_email":      "${params.meta_owner_email}",
-          "meta_owner_department": "${params.meta_owner_department}"
-        ]
       }
     }
     stage('Test') {
