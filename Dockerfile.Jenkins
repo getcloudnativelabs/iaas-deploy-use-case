@@ -8,9 +8,7 @@ LABEL Description="This image provides a custom Jenkins environment." \
 
 USER root
 
-RUN apk add --no-cache build-base make python py-setuptools ruby ruby-dev terraform && \
-    # Fixes https://github.com/ffi/ffi/issues/485
-    apk add --no-cache libffi-dev && \
+RUN apk add --no-cache build-base libffi-dev make python py-setuptools ruby ruby-dev terraform && \
     # Install Bundler
     gem install bundler --no-ri --no-rdoc && \
     # Install pre-commit

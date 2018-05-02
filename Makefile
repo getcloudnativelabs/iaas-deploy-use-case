@@ -18,7 +18,7 @@ init:
 ## Run infrastructure (integration) tests (before deployment).
 test:
 	# See https://github.com/hashicorp/terraform/issues/17655
-	TF_WARN_OUTPUT_ERRORS=1 VARS_JSON_FILE=$(ROOT)/terraform-testing.tfvars.json bundle exec kitchen test --destroy=always
+	TF_WARN_OUTPUT_ERRORS=1 VARS_JSON_FILE=$(ROOT)/terraform-testing.tfvars.json kitchen test --destroy=always
 
 .PHONY: smoke-test
 ## Run infrastructure (smoke) tests (after deployment).
