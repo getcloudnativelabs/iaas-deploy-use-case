@@ -11,6 +11,12 @@ pipeline {
     string(name: 'meta_owner_department', defaultValue: 'Development',     description: 'Your department.')
   }
 
+  environment {
+    AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+    AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+    AWS_REGION            = credentials("${params.aws_region}")
+  }
+
   stages {
     stage('Init') {
       steps {
@@ -29,6 +35,10 @@ pipeline {
       }
     }
     stage('Test') {
+      environment {
+        AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-testing-secret-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-testing-secret-access-key')
+      }
       steps {
         echo 'Run infrastructure (integration) tests.'
         sh 'make test'
