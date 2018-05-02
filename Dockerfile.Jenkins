@@ -1,0 +1,17 @@
+FROM jenkinsci/blueocean:latest
+
+MAINTAINER metmajer@getcloudnative.io
+
+LABEL Description="This image provides a custom Jenkins environment." \
+      Vendor="getcloudnative.io" \
+      Version="0.1"
+
+USER root
+
+RUN apk add --no-cache build-base make python py-setuptools ruby ruby-dev terraform && \
+    # Fixes https://github.com/ffi/ffi/issues/485
+    apk add --no-cache libffi-dev && \
+    # Install Bundler
+    gem install bundler --no-ri --no-rdoc && \
+    # Install pre-commit
+    curl https://bootstrap.pypa.io/get-pip.py | python - pre-commit
