@@ -8,7 +8,7 @@ all: init test deploy smoke-test
 ## Initialize project.
 init:
 	# Install Gemfile bundles
-	bundle install --path vendor/bundle
+	bundle install --path vendor/bundle --jobs=4
 	# Install Git pre-commit hooks
 	pre-commit install --overwrite
 	# Install Terraform working directory
