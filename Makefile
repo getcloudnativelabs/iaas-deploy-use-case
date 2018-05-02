@@ -8,7 +8,7 @@ all: init test deploy smoke-test
 ## Initialize project.
 init:
 	# Install Gemfile bundles
-	bundle install --path vendor/bundle --jobs=4
+	bundle install --path vendor/bundle --jobs=2
 	# Install Git pre-commit hooks
 	pre-commit install --overwrite
 	# Install Terraform working directory
@@ -18,7 +18,7 @@ init:
 ## Run infrastructure (integration) tests (before deployment).
 test:
 	# See https://github.com/hashicorp/terraform/issues/17655
-	TF_WARN_OUTPUT_ERRORS=1 VARS_JSON_FILE=$(ROOT)/terraform-testing.tfvars.json kitchen test --destroy=always
+	TF_WARN_OUTPUT_ERRORS=1 VARS_JSON_FILE=$(ROOT)/terraform-testing.tfvars.json bundle exec kitchen test --destroy=always
 
 .PHONY: smoke-test
 ## Run infrastructure (smoke) tests (after deployment).

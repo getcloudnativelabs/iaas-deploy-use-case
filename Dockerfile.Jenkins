@@ -6,10 +6,12 @@ LABEL Description="This image provides a custom Jenkins environment." \
       Vendor="getcloudnative.io" \
       Version="0.1"
 
+ENV PY_PKGS "python py-setuptools"
+ENV RUBY_PKGS "ruby ruby-dev ruby-bundler ruby-io-console"
+ENV OTHER_PKGS "build-base libffi-dev terraform"
+
 USER root
 
-RUN apk add --no-cache build-base libffi-dev make python py-setuptools ruby ruby-dev terraform && \
-    # Install Bundler
-    gem install bundler --no-ri --no-rdoc && \
+RUN apk --update --upgrade --no-cache add ${PY_PKGS} ${RUBY_PKGS} ${OTHER_PKGS} && \
     # Install pre-commit
     curl https://bootstrap.pypa.io/get-pip.py | python - pre-commit
