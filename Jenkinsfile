@@ -42,17 +42,18 @@ pipeline {
           def json = readJSON text: '{}'
           json.ec2_instance_type = params.ec2_instance_type.toString()
           json.ec2_key_name = params.ec2_key_name.toString()
-          json.meta_namespace = "${env.JOB_NAME}-${params.meta_owner_email}".toString()
+          json.meta_namespace = "${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}".toString()
           json.meta_name = params.meta_name.toString()
           json.meta_owner_name = params.meta_owner_name.toString()
           json.meta_owner_email = params.meta_owner_email.toString()
           json.meta_owner_department = params.meta_owner_department.toString()
           writeJSON file: 'terraform.tfvars.json', json: json
+
+          stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
+          archiveArtifacts artifacts: 'terraform.tfvars.json'
         }
-
-        stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
-        archiveArtifacts artifacts: 'terraform.tfvars.json'
-
+      }
+      steps {
         echo 'Plan infrastructure.'
         sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
 
@@ -66,7 +67,7 @@ pipeline {
         unstash name: 'terraform-plan'
         unstash name: 'terraform-vars'
 
-        sh "make deploy NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
+        sh "make deploy NAMESPACE='${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}'"
       }
     }
     stage('Smoke-Test') {
@@ -78,7 +79,7 @@ pipeline {
     stage('Describe') {
       steps {
         echo 'Describe infrastructure.'
-        sh "make describe NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
+        sh "make describe NAMESPACE='${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}'"
         archiveArtifacts artifacts: 'outputs.json'
       }
     }
