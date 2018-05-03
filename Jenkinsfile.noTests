@@ -1,0 +1,61 @@
+pipeline {
+  agent any
+
+  parameters {
+    choice(name: 'aws_region',            choices: 'eu-west-1\nus-east-1', description: 'The name of the AWS region')
+    choice(name: 'ec2_instance_type',     choices: 't2.micro\nm3.medium',  description: 'The EC2 instance type')
+    string(name: 'ec2_key_name',          defaultValue: '',                description: 'The name of your EC2 key pair')
+    string(name: 'meta_name',             defaultValue: '',                description: 'A name describing the deployment')
+    string(name: 'meta_owner_name',       defaultValue: '',                description: 'Your name')
+    string(name: 'meta_owner_email',      defaultValue: '',                description: 'Your email address')
+    string(name: 'meta_owner_department', defaultValue: 'Development',     description: 'Your department')
+  }
+
+  environment {
+    AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+    AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+    AWS_REGION            = "${params.aws_region}"
+  }
+
+  stages {
+    stage('Init') {
+      steps {
+        echo 'Initialize project.'
+        sh 'make init'
+
+        echo 'Create terraform.tfvars.json.'
+        script {
+          def json = readJSON text: '{}'
+          json.aws_region = params.aws_region.toString()
+          json.ec2_instance_type = params.ec2_instance_type.toString()
+          json.ec2_key_name = params.ec2_key_name.toString()
+          json.meta_namespace = "${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}".toString()
+          json.meta_name = params.meta_name.toString()
+          json.meta_owner_name = params.meta_owner_name.toString()
+          json.meta_owner_email = params.meta_owner_email.toString()
+          json.meta_owner_department = params.meta_owner_department.toString()
+          writeJSON file: 'terraform.tfvars.json', json: json
+
+          archiveArtifacts artifacts: 'terraform.tfvars.json'
+          stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
+        }
+      }
+    }
+    stage('Deploy') {
+      steps {
+        unstash name: 'terraform-vars'
+
+        echo 'Deploy infrastructure.'
+        sh "make plan deploy NAMESPACE='${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}'"
+      }
+    }
+    stage('Describe') {
+      steps {
+        echo 'Describe infrastructure.'
+        sh "make describe NAMESPACE='${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}'"
+
+        archiveArtifacts artifacts: 'outputs.json'
+      }
+    }
+  }
+}
