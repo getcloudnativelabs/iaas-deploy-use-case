@@ -84,7 +84,7 @@ pipeline {
       }
     }
   }
-/*
+
   post {
     success {
       mail to: "${params.meta_owner_email}", subject: "Your infrastructure job '${env.JOB_NAME}' is ready :-)", body: "Check the console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"
@@ -93,5 +93,4 @@ pipeline {
       mail to: "${params.meta_owner_email}", subject: "Your infrastructure job '${env.JOB_NAME}' has failed :-('${env.JOB_NAME}'", body: "Check the console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"
     }
   }
-*/
 }
