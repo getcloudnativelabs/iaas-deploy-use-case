@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   parameters {
-    choice(name: 'aws_region',            choices: 'EU-WEST-1\nUS-EAST-1', description: 'The name of the AWS region')
-    choice(name: 'ec2_instance_type',     choices: 'T2.MICRO\nM3.MEDIUM',  description: 'The EC2 instance type')
+    choice(name: 'aws_region',            choices: 'eu-west-1\nus-east-1', description: 'The name of the AWS region')
+    choice(name: 'ec2_instance_type',     choices: 't2.micro\nm3.medium',  description: 'The EC2 instance type')
     string(name: 'ec2_key_name',          defaultValue: '',                description: 'The name of your EC2 key pair')
     string(name: 'meta_name',             defaultValue: '',                description: 'A name describing the deployment')
     string(name: 'meta_owner_name',       defaultValue: '',                description: 'Your name')
