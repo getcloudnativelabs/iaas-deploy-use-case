@@ -48,16 +48,19 @@ pipeline {
     stage('Deploy') {
       steps {
         echo 'Create terraform.tfvars.json.'
-        def json = readJSON text: '{
-          "ec2_instance_type":     "${params.ec2_instance_type}",
-          "ec2_key_name":          "${params.ec2_key_name}",
-          "meta_namespace":        "${env.JOB_NAME}-${params.meta_owner_email}",
-          "meta_name":             "${params.meta_name}",
-          "meta_owner_name":       "${params.meta_owner_name}",
-          "meta_owner_email":      "${params.meta_owner_email}",
-          "meta_owner_department": "${params.meta_owner_department}"
-        }'
-        writeJSON file: 'terraform.tfvars.json', json: json
+
+        script {
+          def json = readJSON text: '{}'
+          json.ec2_instance_type = "${params.ec2_instance_type}"
+          json.ec2_key_name = "${params.ec2_key_name}"
+          json.meta_namespace = "${env.JOB_NAME}-${params.meta_owner_email}"
+          json.meta_name = "${params.meta_name}"
+          json.meta_owner_name = "${params.meta_owner_name}"
+          json.meta_owner_email = "${params.meta_owner_email}"
+          json.meta_owner_department = "${params.meta_owner_department}"
+          writeJSON file: 'terraform.tfvars.json', json: json
+        }
+
         archiveArtifacts artifacts: 'terraform.tfvars.json'
 
         echo 'Deploy infrastructure.'
