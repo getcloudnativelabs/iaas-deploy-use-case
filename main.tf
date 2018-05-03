@@ -38,18 +38,25 @@ data "aws_ami" "amazon_linux" {
 module "ec2_security_group" {
   source = "github.com/getcloudnativelabs/iaas-blueprint-components//aws/ec2-security-group"
 
-  name   = "${var.meta_name}-sg"
+  name   = "${var.meta_namespace}-${var.meta_name}-sg"
   vpc_id = "${data.aws_vpc.default.id}"
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
   ingress_rules       = ["ssh-tcp", "http-80-tcp", "all-icmp"]
   egress_rules        = ["all-all"]
+
+  tags {
+    Name             = "${var.meta_namespace}-${var.meta_name}-sg"
+    Owner_Name       = "${var.meta_owner_name}"
+    Owner_Email      = "${var.meta_owner_email}"
+    Owner_Department = "${var.meta_owner_department}"
+  }
 }
 
 module "ec2_instance" {
   source = "github.com/getcloudnativelabs/iaas-blueprint-components//aws/ec2-instance"
 
-  name                        = "${var.meta_name}"
+  name                        = "${var.meta_namespace}-${var.meta_name}"
   ami                         = "${data.aws_ami.amazon_linux.id}"
   instance_type               = "${var.ec2_instance_type}"
   subnet_id                   = "${element(data.aws_subnet_ids.all.ids, 0)}"
@@ -58,7 +65,7 @@ module "ec2_instance" {
   key_name                    = "${var.ec2_key_name}"
 
   tags {
-    Name             = "${var.meta_name}"
+    Name             = "${var.meta_namespace}-${var.meta_name}"
     Owner_Name       = "${var.meta_owner_name}"
     Owner_Email      = "${var.meta_owner_email}"
     Owner_Department = "${var.meta_owner_department}"

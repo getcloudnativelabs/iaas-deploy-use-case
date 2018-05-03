@@ -2,6 +2,11 @@
 # METADATA
 ###########
 
+variable "meta_namespace" {
+  description = "A namespace name."
+  default     = "default"
+}
+
 variable "meta_name" {
   description = "A name describing the deployment."
 }

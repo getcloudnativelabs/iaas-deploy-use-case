@@ -34,10 +34,37 @@ pipeline {
         sh 'make test'
       }
     }
+    stage('Plan') {
+      steps {
+        echo 'Plan infrastructure.'
+        sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
+
+        stash includes: '.terraform', name: 'terraform-config'
+        stash includes: 'tfplan', name: 'terraform-plan'
+
+        archiveArtifacts artifacts: 'tfplan'
+      }
+    }
     stage('Deploy') {
       steps {
+        echo 'Create terraform.tfvars.json.'
+        def json = readJSON text: '{
+          "ec2_instance_type":     "${params.ec2_instance_type}",
+          "ec2_key_name":          "${params.ec2_key_name}",
+          "meta_namespace":        "${env.JOB_NAME}-${params.meta_owner_email}",
+          "meta_name":             "${params.meta_name}",
+          "meta_owner_name":       "${params.meta_owner_name}",
+          "meta_owner_email":      "${params.meta_owner_email}",
+          "meta_owner_department": "${params.meta_owner_department}"
+        }'
+        writeJSON file: 'terraform.tfvars.json', json: json
+        archiveArtifacts artifacts: 'terraform.tfvars.json'
+
         echo 'Deploy infrastructure.'
-        sh 'make deploy'
+        unstash name: 'terraform-config'
+        unstash name: 'terraform-plan'
+
+        sh "make deploy NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
       }
     }
     stage('Smoke-Test') {
@@ -45,6 +72,22 @@ pipeline {
         echo 'Run infrastructure (smoke) tests.'
         sh 'make smoke-test'
       }
+    }
+    stage('Describe') {
+      steps {
+        echo 'Describe infrastructure.'
+        sh "make describe NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
+        archiveArtifacts artifacts: 'outputs.json'
+      }
+    }
+  }
+
+  post {
+    success {
+      mail to: "${params.meta_owner_email}", subject: "Your infrastructure job '${env.JOB_NAME}' is ready :-)", body: "Check the console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"
+    }
+    failure {
+      mail to: "${params.meta_owner_email}", subject: "Your infrastructure job '${env.JOB_NAME}' has failed :-('${env.JOB_NAME}'", body: "Check the console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"
     }
   }
 }
