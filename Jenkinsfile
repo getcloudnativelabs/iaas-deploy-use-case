@@ -56,7 +56,6 @@ pipeline {
         echo 'Plan infrastructure.'
         sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
 
-        stash includes: '.terraform', name: 'terraform-config'
         stash includes: 'tfplan', name: 'terraform-plan'
         archiveArtifacts artifacts: 'tfplan'
       }
@@ -64,7 +63,6 @@ pipeline {
     stage('Deploy') {
       steps {
         echo 'Deploy infrastructure.'
-        unstash name: 'terraform-config'
         unstash name: 'terraform-plan'
         unstash name: 'terraform-vars'
 
