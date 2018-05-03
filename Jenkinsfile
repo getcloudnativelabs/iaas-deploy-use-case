@@ -22,6 +22,23 @@ pipeline {
       steps {
         echo 'Initialize project.'
         sh 'make init'
+
+        echo 'Create terraform.tfvars.json.'
+        script {
+          def json = readJSON text: '{}'
+          json.aws_region = params.aws_region.toString()
+          json.ec2_instance_type = params.ec2_instance_type.toString()
+          json.ec2_key_name = params.ec2_key_name.toString()
+          json.meta_namespace = "${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}".toString()
+          json.meta_name = params.meta_name.toString()
+          json.meta_owner_name = params.meta_owner_name.toString()
+          json.meta_owner_email = params.meta_owner_email.toString()
+          json.meta_owner_department = params.meta_owner_department.toString()
+          writeJSON file: 'terraform.tfvars.json', json: json
+
+          archiveArtifacts artifacts: 'terraform.tfvars.json'
+          stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
+        }
       }
     }
     stage('Test') {
@@ -36,29 +53,13 @@ pipeline {
     }
     stage('Plan') {
       steps {
-        echo 'Create terraform.tfvars.json.'
-
-        script {
-          def json = readJSON text: '{}'
-          json.aws_region = params.aws_region.toString()
-          json.ec2_instance_type = params.ec2_instance_type.toString()
-          json.ec2_key_name = params.ec2_key_name.toString()
-          json.meta_namespace = "${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}".toString()
-          json.meta_name = params.meta_name.toString()
-          json.meta_owner_name = params.meta_owner_name.toString()
-          json.meta_owner_email = params.meta_owner_email.toString()
-          json.meta_owner_department = params.meta_owner_department.toString()
-          writeJSON file: 'terraform.tfvars.json', json: json
-
-          stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
-          archiveArtifacts artifacts: 'terraform.tfvars.json'
-        }
+        unstash name: 'terraform-vars'
 
         echo 'Plan infrastructure.'
         sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
 
-        stash includes: 'tfplan', name: 'terraform-plan'
         archiveArtifacts artifacts: 'tfplan'
+        stash includes: 'tfplan', name: 'terraform-plan'
       }
     }
     stage('Deploy') {
@@ -80,6 +81,7 @@ pipeline {
       steps {
         echo 'Describe infrastructure.'
         sh "make describe NAMESPACE='${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}'"
+
         archiveArtifacts artifacts: 'outputs.json'
       }
     }
