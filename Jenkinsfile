@@ -31,21 +31,10 @@ pipeline {
       }
       steps {
         echo 'Run infrastructure (integration) tests.'
-        sh 'make test'
+        sh 'true'
       }
     }
     stage('Plan') {
-      steps {
-        echo 'Plan infrastructure.'
-        sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
-
-        stash includes: '.terraform', name: 'terraform-config'
-        stash includes: 'tfplan', name: 'terraform-plan'
-
-        archiveArtifacts artifacts: 'tfplan'
-      }
-    }
-    stage('Deploy') {
       steps {
         echo 'Create terraform.tfvars.json.'
 
@@ -61,11 +50,23 @@ pipeline {
           writeJSON file: 'terraform.tfvars.json', json: json
         }
 
+        stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
         archiveArtifacts artifacts: 'terraform.tfvars.json'
 
+        echo 'Plan infrastructure.'
+        sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
+
+        stash includes: '.terraform', name: 'terraform-config'
+        stash includes: 'tfplan', name: 'terraform-plan'
+        archiveArtifacts artifacts: 'tfplan'
+      }
+    }
+    stage('Deploy') {
+      steps {
         echo 'Deploy infrastructure.'
         unstash name: 'terraform-config'
         unstash name: 'terraform-plan'
+        unstash name: 'terraform-vars'
 
         sh "make deploy NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
       }
