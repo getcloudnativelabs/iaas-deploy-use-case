@@ -52,8 +52,7 @@ pipeline {
           stash includes: 'terraform.tfvars.json', name: 'terraform-vars'
           archiveArtifacts artifacts: 'terraform.tfvars.json'
         }
-      }
-      steps {
+
         echo 'Plan infrastructure.'
         sh "make plan NAMESPACE='${env.JOB_NAME}-${params.meta_owner_email}'"
 
