@@ -9,11 +9,11 @@ all: init test plan deploy smoke-test describe
 ## Initialize project.
 init:
 	# Install Gemfile bundles
-	@bundle install --path vendor/bundle --jobs=2
+	bundle install --path vendor/bundle --jobs=2
 	# Install Git pre-commit hooks
-	@pre-commit install --overwrite
+	pre-commit install --overwrite
 	# Install Terraform working directory
-	@terraform init -input=false
+	terraform init -input=false
 
 .PHONY: test
 ## Run infrastructure (integration) tests (before deployment).
