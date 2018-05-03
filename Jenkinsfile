@@ -40,6 +40,7 @@ pipeline {
 
         script {
           def json = readJSON text: '{}'
+          json.aws_region = params.aws_region.toString()
           json.ec2_instance_type = params.ec2_instance_type.toString()
           json.ec2_key_name = params.ec2_key_name.toString()
           json.meta_namespace = "${env.JOB_NAME.replaceAll('/','-').replaceAll(' ','')}-${params.meta_owner_email}".toString()
