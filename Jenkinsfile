@@ -40,13 +40,13 @@ pipeline {
 
         script {
           def json = readJSON text: '{}'
-          json.ec2_instance_type = "${params.ec2_instance_type}"
-          json.ec2_key_name = "${params.ec2_key_name}"
-          json.meta_namespace = "${env.JOB_NAME}-${params.meta_owner_email}"
-          json.meta_name = "${params.meta_name}"
-          json.meta_owner_name = "${params.meta_owner_name}"
-          json.meta_owner_email = "${params.meta_owner_email}"
-          json.meta_owner_department = "${params.meta_owner_department}"
+          json.ec2_instance_type = params.ec2_instance_type.toString()
+          json.ec2_key_name = params.ec2_key_name.toString()
+          json.meta_namespace = "${env.JOB_NAME}-${params.meta_owner_email}".toString()
+          json.meta_name = params.meta_name.toString()
+          json.meta_owner_name = params.meta_owner_name.toString()
+          json.meta_owner_email = params.meta_owner_email.toString()
+          json.meta_owner_department = params.meta_owner_department.toString()
           writeJSON file: 'terraform.tfvars.json', json: json
         }
 
