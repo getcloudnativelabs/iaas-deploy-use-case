@@ -41,6 +41,7 @@ pipeline {
         }
       }
     }
+    /*
     stage('Test') {
       environment {
         AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-testing-secret-key-id')
@@ -51,6 +52,7 @@ pipeline {
         sh 'make test'
       }
     }
+    */
     stage('Plan') {
       steps {
         unstash name: 'terraform-vars'
